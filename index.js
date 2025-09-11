@@ -1,23 +1,33 @@
 import express from "express";
 import os from "os";
-import { execSync } from "child_process";
 
 const app = express();
 const port = 3000;
 const hostname = os.hostname();
 
-let commitHash = "N/A";
-try {
-  commitHash = execSync("git rev-parse HEAD").toString().trim();
-} catch (err) {
-  console.log("Not a git repository or commit not found");
-}
+const GITHUB_API_URL = "https://api.github.com/repos/TanvirMahfuz/COMMIT-HASH/commits/main";
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    hostname,
-    commitHash
-  });
+app.get("/",async (req, res) => {
+    try {
+        const result = await fetch(GITHUB_API_URL)
+        const data = await result.json(0)
+        console.log({
+            msg: "Fetched data successfully",
+            hostname,
+            commitHash: data.sha,
+            commitMessage: data.commit.message
+        })
+        return res.status(200).json({
+            msg: "Fetched data successfully",
+            hostname,
+            commitHash: data.sha,
+            commitMessage: data.commit.message
+        });
+
+    } catch (error) {
+        res.status(500).json({msg:"internal server error",error: error.message})
+    }
+
 });
 
 const server = app.listen(port, () => {

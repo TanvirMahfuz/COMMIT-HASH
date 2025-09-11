@@ -1,1 +1,26 @@
-/node_modules
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+
+# MacOS system files
+.DS_Store
+
+# Docker
+docker-compose.override.yml
+*.dockerignore
+
+# VSCode settings (optional)
+.vscode/
