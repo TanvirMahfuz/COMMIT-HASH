@@ -1,0 +1,6 @@
+- name: copy file from remote1 to remote2
+  synchronize:
+    src: /home/tanvir1/logs.txt
+    dest: /home/tanvir2/logs.txt
+    mode: push
+  delegate_to: remote2

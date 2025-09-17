@@ -1,0 +1,25 @@
+---
+- hosts: nginx
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: Test sudo access
+      command: whoami
+      register: whoami_result
+
+    - name: Show whoami output
+      debug:
+        var: whoami_result.stdout
+
+    - name: Test installing a dummy package (like sl)
+      apt:
+        name: sl
+        state: present
+        update_cache: yes
+      register: install_result
+      ignore_errors: yes
+
+    - name: Show install result
+      debug:
+        var: install_result

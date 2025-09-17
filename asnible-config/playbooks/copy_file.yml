@@ -1,0 +1,16 @@
+- name: Copy file from remote1 to control node
+  hosts: remote1
+  tasks:
+    - name: Fetch file from remote1
+      fetch:
+        src: /home/tanvir1/logs.txt
+        dest: /tmp/files/
+        flat: yes
+- name: Push file from control node to remote2
+  hosts: remote2
+  tasks:
+    - name: Copy file to remote2
+      copy:
+        src: /tmp/files/logs.txt
+        dest: /home/tanvir2/logs.txt
+

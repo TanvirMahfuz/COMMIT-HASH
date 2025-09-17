@@ -1,0 +1,20 @@
+---
+- hosts: all # this is like a target. all contains the server addresses. these are the addresses we need to connect to via ssh.
+  become: yes # yes means you will run commands with sudo.
+  roles: # the list in here is a list of commands. each file in this directory|path contains some statements that are going to be used when running the executor.
+    - common
+# in short, hosts: all -> means where. become: yes -> means run commands with sudo. and roles: - list -> run these files
+
+# here we just change target and executables to execute different commands(role) to different targets
+- hosts: web
+  become: yes
+  roles:
+    - webserver
+
+- name: Install and configure nginx
+  hosts: nginx
+  become: yes
+  gather_facts: yes
+  roles:
+    - nginx
+
