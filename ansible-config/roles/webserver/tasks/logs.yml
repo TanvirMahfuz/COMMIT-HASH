@@ -1,0 +1,5 @@
+- name: FETCH CONTAINER LOGS
+  command: docker logs commit-hash-printer
+  register: docker_logs
+  changed_when: false
+

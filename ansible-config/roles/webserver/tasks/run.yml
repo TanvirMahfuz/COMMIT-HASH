@@ -1,0 +1,10 @@
+- name: RUN DOCKER CONTAINER
+  docker_container:
+    name: commit-hash-printer
+    image: this-image-prints-commit-hash:latest
+    state: started
+    ports:
+      - "3000:3000"
+  register: container_result
+  ignore_errors: yes
+

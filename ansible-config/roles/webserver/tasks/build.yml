@@ -1,0 +1,27 @@
+- name: Remove previous docker image (if exists)
+  docker_image:
+    name: this-image-prints-commit-hash
+    tag: latest
+    state: absent
+    force_absent: true
+  ignore_errors: yes
+- name: BUILD DOCKER IMAGE FROM DOCKERFILE
+  docker_image:
+    name: this-image-prints-commit-hash # the name parameter must contain an image name
+    tag: latest
+    source: build
+    force_source: true
+    build:
+      path: /home/{{ansible_user}}/server/app
+      nocache: yes
+  register: build_result
+  ignore_errors: yes
+
+- name: SHOW DOCKER IMAGE BUILD LOG
+  debug:
+    var: build_result.build_output
+
+- name: Save new app contents hash
+  copy:
+    content: "{{ app_hash.stdout }}"
+    dest: /home/{{ ansible_user }}/server/.app_hash

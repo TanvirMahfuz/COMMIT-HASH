@@ -1,0 +1,17 @@
+- name: Get container names from image
+  command: docker ps -a --filter "ancestor=this-image-prints-commit-hash" --format "{{'{{.Names}}'}}"
+  register: container_names
+
+- name: Show containers found
+  debug:
+    var: container_names.stdout_lines
+
+- name: Stop containers
+  command: docker stop {{ item }}
+  loop: "{{ container_names.stdout_lines }}"
+  when: container_names.stdout_lines | length > 0
+
+- name: Remove containers
+  command: docker rm -f {{ item }}
+  loop: "{{ container_names.stdout_lines }}"
+  when: container_names.stdout_lines | length > 0

@@ -1,0 +1,13 @@
+- name: Copy app files to VM
+  copy:
+    src: /home/tanvir_mahfuz/app
+    dest: /home/{{ ansible_user }}/server
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+  register: copy_result
+  ignore_errors: yes
+
+- name: Show copy results
+  debug:
+    var: copy_result

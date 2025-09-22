@@ -1,0 +1,6 @@
+- import_tasks: copy.yml
+- import_tasks: compare.yml
+- import_tasks: remove.yml
+- import_tasks: build.yml
+- import_tasks: run.yml
+- import_tasks: logs.yml

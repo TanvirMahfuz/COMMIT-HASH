@@ -1,0 +1,15 @@
+- name: Compute SHA256 hash of app contents
+  shell: |
+    find /home/{{ ansible_user }}/server/app -type f -exec sha256sum {} \; | sort | sha256sum | awk '{print $1}'
+  register: app_hash
+  changed_when: false
+
+- name: Load previous hash if exists
+  slurp:
+    src: /home/{{ ansible_user }}/server/.app_hash
+  register: previous_hash_file
+  ignore_errors: yes
+
+- name: Determine if rebuild is needed
+  set_fact:
+    rebuild_needed: "{{ previous_hash_file.content | default('') | b64decode != app_hash.stdout }}"
