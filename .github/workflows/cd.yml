@@ -17,7 +17,7 @@ jobs:
 
       - name: Deploy to VM1
         if: matrix.vm == 'VM1'
-        uses: ./actions/deploy
+        uses: ./actions/deploy/action
         with:
           vm-ip: ${{ secrets.VM1_IP }}
           vm-user: ${{ secrets.VM1_USER }}
@@ -25,7 +25,7 @@ jobs:
 
       - name: Deploy to VM2
         if: matrix.vm == 'VM2'
-        uses: ./actions/deploy
+        uses: ./actions/deploy/action
         with:
           vm-ip: ${{ secrets.VM2_IP }}
           vm-user: ${{ secrets.VM2_USER }}
@@ -33,7 +33,7 @@ jobs:
 
       - name: Deploy to VM3
         if: matrix.vm == 'VM3'
-        uses: ./actions/deploy
+        uses: ./actions/deploy/action
         with:
           vm-ip: ${{ secrets.VM3_IP }}
           vm-user: ${{ secrets.VM3_USER }}
