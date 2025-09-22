@@ -38,3 +38,4 @@ jobs:
           vm-ip: ${{ secrets.VM3_IP }}
           vm-user: ${{ secrets.VM3_USER }}
           dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }} # pass it as input

@@ -11,6 +11,8 @@ inputs:
   dockerhub-username:
     required: true
     description: "DockerHub username"
+  ssh-private-key:
+    required: true
 
 runs:
   using: "composite"
@@ -21,6 +23,7 @@ runs:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Deploy Docker container
+      shell: bash
       run: |
         ssh -o StrictHostKeyChecking=no ${{ inputs.vm-user }}@${{ inputs.vm-ip }} "
           docker pull ${{ inputs.dockerhub-username }}/simple-github-commit-hash-printer:latest &&
