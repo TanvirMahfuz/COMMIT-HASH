@@ -1,4 +1,10 @@
 name: CD - setting starting servers in vms
+on:
+  workflow_run:
+    workflows: ["CI - Build & Push Docker Image"]
+    types:
+      - completed
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -9,22 +15,26 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Deploy to VM ${{ matrix.vm }}
+      - name: Deploy to VM1
+        if: matrix.vm == 'VM1'
         uses: ./actions/deploy
-        env:
-          # VM IPs
-          VM1_IP: ${{ secrets.VM1_IP }}
-          VM2_IP: ${{ secrets.VM2_IP }}
-          VM3_IP: ${{ secrets.VM3_IP }}
-
-          # VM Users
-          VM1_USER: ${{ secrets.VM1_USER }}
-          VM2_USER: ${{ secrets.VM2_USER }}
-          VM3_USER: ${{ secrets.VM3_USER }}
-
-          # DockerHub
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         with:
-          vm-ip: ${{ env[matrix.vm ~ "_IP"] }}
-          vm-user: ${{ env[matrix.vm ~ "_USER"] }}
-          dockerhub-username: ${{ env.DOCKERHUB_USERNAME }}
+          vm-ip: ${{ secrets.VM1_IP }}
+          vm-user: ${{ secrets.VM1_USER }}
+          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+
+      - name: Deploy to VM2
+        if: matrix.vm == 'VM2'
+        uses: ./actions/deploy
+        with:
+          vm-ip: ${{ secrets.VM2_IP }}
+          vm-user: ${{ secrets.VM2_USER }}
+          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+
+      - name: Deploy to VM3
+        if: matrix.vm == 'VM3'
+        uses: ./actions/deploy
+        with:
+          vm-ip: ${{ secrets.VM3_IP }}
+          vm-user: ${{ secrets.VM3_USER }}
+          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
