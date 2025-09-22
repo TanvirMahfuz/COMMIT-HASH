@@ -25,43 +25,38 @@ runs:
     - name: Deploy Docker container
       shell: bash
       run: |
-        # --------------- CONFIGURATION ---------------
-        IMAGE="${{ inputs.dockerhub-username }}/simple-github-commit-hash-printer:latest"
-        CONTAINER_NAME="hash-printer"
+        ssh -o StrictHostKeyChecking=no ${{ inputs.vm-user }}@${{ inputs.vm-ip }} << 'EOF'
+          IMAGE="${{ inputs.dockerhub-username }}/simple-github-commit-hash-printer:latest"
+          CONTAINER_NAME="simple-github-commit-hash-printer"
 
-        # --------------- SCRIPT START ----------------
-        echo "===== Starting Docker Deployment Script ====="
+          echo "===== Checking if the image exists locally ====="
+          if docker image inspect "$IMAGE" >/dev/null 2>&1; then
+            echo "Old image exists."
 
-        echo "===== Checking if the image exists locally ====="
-        if docker image inspect "$IMAGE" >/dev/null 2>&1; then
-          echo "Old image exists locally."
+            echo "===== Checking for running containers using this image ====="
+            RUNNING_CONTAINERS=$(docker ps -q --filter ancestor="$IMAGE")
 
+            if [ -n "$RUNNING_CONTAINERS" ]; then
+              echo "===== Stopping running containers ====="
+              docker stop $RUNNING_CONTAINERS
 
-          echo "===== Checking for running containers using this image ====="
-          RUNNING_CONTAINERS=$(docker ps -q --filter ancestor="$IMAGE")
+              echo "===== Removing stopped containers and their volumes ====="
+              docker rm -v $RUNNING_CONTAINERS
+            else
+              echo "No running containers found for this image."
+            fi
 
-
-          if [ -n "$RUNNING_CONTAINERS" ]; then
-            echo "===== Stopping running containers ====="
-            docker stop $RUNNING_CONTAINERS
-
-
-            echo "===== Removing stopped containers and their volumes ====="
-            docker rm -v $RUNNING_CONTAINERS
+            echo "===== Removing old image ====="
+            docker rmi -f "$IMAGE"
           else
-            echo "No running containers found for this image."
+            echo "No old image found locally."
           fi
 
-          echo "===== Removing old image ====="
-          docker rmi -f "$IMAGE"
-        else
-          echo "No old image found locally."
-        fi
+          echo "===== Pulling new image from Docker Hub ====="
+          docker pull "$IMAGE"
 
-        echo "===== Pulling new image ====="
-        docker pull "$IMAGE"
+          echo "===== Running new container ====="
+          docker run -d --name "$CONTAINER_NAME" -p 3000:3000 "$IMAGE"
 
-        echo "===== Running new container ====="
-        docker run -d --name "$CONTAINER_NAME" -p 3000:3000 "$IMAGE"
-
-        echo "===== Deployment Completed Successfully ====="
+          echo "===== Deployment Completed Successfully ====="
+        EOF
