@@ -17,7 +17,7 @@ jobs:
 
       - name: Deploy to VM1
         if: matrix.vm == 'VM1'
-        uses: ./actions/deploy/action
+        uses: ./actions/deploy/
         with:
           vm-ip: ${{ secrets.VM1_IP }}
           vm-user: ${{ secrets.VM1_USER }}
