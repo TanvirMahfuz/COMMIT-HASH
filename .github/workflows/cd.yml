@@ -11,7 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        vm-ip: [${{ secrets.VM1_IP }}, ${{ secrets.VM2_IP }}, ${{ secrets.VM3_IP }}]
+        vm-ip:
+          - ${{ secrets.VM1_IP }}
+          - ${{ secrets.VM2_IP }}
+          - ${{ secrets.VM3_IP }}
 
     steps:
       - name: Checkout code
