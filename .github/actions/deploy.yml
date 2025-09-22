@@ -1,0 +1,28 @@
+name: Deploy Docker to VM
+description: Pull and run Docker container on remote VM
+inputs:
+  vm-ip:
+    required: true
+    description: "IP address of the VM"
+  vm-user:
+    required: true
+    description: "SSH user"
+  dockerhub-username:
+    required: true
+    description: "DockerHub username"
+runs:
+  using: "composite"
+  steps:
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.8.1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy Docker container
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ inputs.vm-user }}@${{ inputs.vm-ip }} "
+          docker pull ${{ inputs.dockerhub-username }}/myapp:latest &&
+          docker stop myapp || true &&
+          docker rm myapp || true &&
+          docker run -d --name myapp -p 3000:3000 ${{ inputs.dockerhub-username }}/myapp:latest
+        "

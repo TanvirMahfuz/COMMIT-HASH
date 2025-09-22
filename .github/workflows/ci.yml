@@ -1,0 +1,38 @@
+# author: @tanvirmahfuz22
+#This is a github workflow file
+
+#name of the workflow
+name: CI - Build & Push Docker Image
+
+#This section is the event section. Here we define events like on push, pull_request etc
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+#This is the jobs section. Jobs consist of steps
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    # this is the steps subsection, here we define the steps in a job
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3 # pulling my main repo to the linux machine
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2 # pulling the dockelogin action
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      # once the actions are perfomed I have a linux environment with docker installed and logged in and my code base in the machine
+
+      - name: Build the Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/simple-github-commit-hash-printer:latest .
+
+      - name: Push the Docker Image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/simple-github-commit-hash-printer:latest
