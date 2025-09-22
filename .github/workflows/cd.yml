@@ -22,6 +22,7 @@ jobs:
           vm-ip: ${{ secrets.VM1_IP }}
           vm-user: ${{ secrets.VM1_USER }}
           dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy to VM2
         if: matrix.vm == 'VM2'
@@ -30,6 +31,7 @@ jobs:
           vm-ip: ${{ secrets.VM2_IP }}
           vm-user: ${{ secrets.VM2_USER }}
           dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy to VM3
         if: matrix.vm == 'VM3'
@@ -38,3 +40,4 @@ jobs:
           vm-ip: ${{ secrets.VM3_IP }}
           vm-user: ${{ secrets.VM3_USER }}
           dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
