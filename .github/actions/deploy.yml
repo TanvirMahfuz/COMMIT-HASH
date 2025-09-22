@@ -1,5 +1,6 @@
 name: Deploy Docker to VM
 description: Pull and run Docker container on remote VM
+
 inputs:
   vm-ip:
     required: true
@@ -10,6 +11,7 @@ inputs:
   dockerhub-username:
     required: true
     description: "DockerHub username"
+
 runs:
   using: "composite"
   steps:
@@ -21,8 +23,8 @@ runs:
     - name: Deploy Docker container
       run: |
         ssh -o StrictHostKeyChecking=no ${{ inputs.vm-user }}@${{ inputs.vm-ip }} "
-          docker pull ${{ inputs.dockerhub-username }}/myapp:latest &&
-          docker stop myapp || true &&
-          docker rm myapp || true &&
-          docker run -d --name myapp -p 3000:3000 ${{ inputs.dockerhub-username }}/myapp:latest
+          docker pull ${{ inputs.dockerhub-username }}/simple-github-commit-hash-printer:latest &&
+          docker stop simple-github-commit-hash-printer || true &&
+          docker rm simple-github-commit-hash-printer || true &&
+          docker run -d --name simple-github-commit-hash-printer -p 3000:3000 ${{ inputs.dockerhub-username }}/simple-github-commit-hash-printer:latest
         "
