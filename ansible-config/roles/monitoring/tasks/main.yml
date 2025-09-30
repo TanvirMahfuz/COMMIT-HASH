@@ -1,0 +1,17 @@
+- name: Ensure Prometheus is running
+  shell: |
+    docker ps -a -q --filter "ancestor=prom/prometheus" --filter "status=exited" | xargs -r docker start
+  register: prometheus_result
+- name: Prometheus logs
+  debug:
+    var: prometheus_result
+
+- name: Ensure grafana is running
+  shell: |
+    docker ps -a -q --filter "ancestor=grafana/grafana-oss" --filter "status=exited" | xargs -r docker start
+  register: grafana_result
+- name: Grafana logs
+  debug:
+    var: grafana_result
+
+

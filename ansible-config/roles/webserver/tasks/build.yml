@@ -19,7 +19,7 @@
 
 - name: SHOW DOCKER IMAGE BUILD LOG
   debug:
-    var: build_result.build_output
+    var: build_result.stdout_lines
 
 - name: Save new app contents hash
   copy:

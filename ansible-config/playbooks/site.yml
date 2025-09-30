@@ -4,7 +4,7 @@
   roles: # the list in here is a list of commands. each file in this directory|path contains some statements that are going to be used when running the executor.
     - common
 # in short, hosts: all -> means where. become: yes -> means run commands with sudo. and roles: - list -> run these files
-
+    - monitoring
 # here we just change target and executables to execute different commands(role) to different targets
 - hosts: web
   become: yes
